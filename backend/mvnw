@@ -1,0 +1,27 @@
+#!/bin/sh
+MVN_VERSION="3.9.6"
+DIST_DIR="$HOME/.m2/wrapper/dists"
+MVN_DIR="$DIST_DIR/apache-maven-$MVN_VERSION"
+
+if [ ! -d "$MVN_DIR" ]; then
+    echo "[HireHub Maven Wrapper] Maven $MVN_VERSION not found. Downloading..."
+    mkdir -p "$DIST_DIR"
+    curl -sL "https://archive.apache.org/dist/maven/maven-3/$MVN_VERSION/binaries/apache-maven-$MVN_VERSION-bin.zip" -o "/tmp/maven.zip"
+    if [ $? -ne 0 ]; then
+        echo "[ERROR] Failed to download Maven."
+        exit 1
+    fi
+    echo "[HireHub Maven Wrapper] Extracting Maven..."
+    unzip -q "/tmp/maven.zip" -d "$DIST_DIR"
+    rm "/tmp/maven.zip"
+    echo "[HireHub Maven Wrapper] Maven configured successfully."
+fi
+
+MVN_BIN="$MVN_DIR/bin/mvn"
+if [ ! -f "$MVN_BIN" ]; then
+    echo "[ERROR] Maven binary not found."
+    exit 1
+fi
+
+chmod +x "$MVN_BIN"
+exec "$MVN_BIN" "$@"

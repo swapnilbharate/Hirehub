@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Dashboard - NexHire</title>
+
+  <link rel="stylesheet" href="../css/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-3">
+  <span class="navbar-brand fw-bold">NexHire Dashboard</span>
+  <div>
+    <a href="jobs.html" class="btn btn-light me-2">Jobs</a>
+    <button onclick="logout()" class="btn btn-outline-light">Logout</button>
+  </div>
+</nav>
+
+<div class="container mt-4">
+
+  <div class="row mb-4 text-center">
+    <div class="col-md-4">
+      <div class="card p-3 bg-primary text-white">
+        <h6>Total Jobs</h6>
+        <h3 id="totalJobs">0</h3>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3 bg-success text-white">
+        <h6>Applied Jobs</h6>
+        <h3 id="appliedJobs">0</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-3">
+    <h5>📌 Applied Jobs</h5>
+    <div id="applied" class="row mt-3"></div>
+  </div>
+
+</div>
+
+<script>
+const API = "http://localhost:5000/api";
+
+if(!localStorage.getItem("token")){
+  window.location = "login.html";
+}
+
+function logout(){
+  localStorage.removeItem("token");
+  window.location = "login.html";
+}
+
+async function loadDashboard(){
+  const resJobs = await fetch(`${API}/jobs`);
+  const jobs = await resJobs.json();
+
+  const resApps = await fetch(`${API}/apply`,{
+    headers:{ 'Authorization': localStorage.getItem("token") }
+  });
+  const apps = await resApps.json();
+
+  document.getElementById("totalJobs").innerText = jobs.length;
+  document.getElementById("appliedJobs").innerText = apps.length;
+
+  const container = document.getElementById("applied");
+
+  container.innerHTML = apps.map(a=>{
+    const job = jobs.find(j => j._id == a.jobId);
+
+    return `
+      <div class="col-md-4">
+        <div class="card p-3 mb-3 shadow">
+          <h5>${job?.title || "Job"}</h5>
+          <p>${job?.company}</p>
+          <span class="badge bg-success">Applied</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>

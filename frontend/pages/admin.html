@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+
+  <link rel="stylesheet" href="../css/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-3">
+  <span class="navbar-brand">Admin Dashboard</span>
+
+  <div>
+    <a href="jobs.html" class="btn btn-light me-2">View Jobs</a>
+    <a href="login.html" class="btn btn-outline-light">Logout</a>
+  </div>
+</nav>
+
+<div class="container mt-4">
+
+  <!-- STATS -->
+  <div class="row text-center mb-4">
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h5>Total Jobs</h5>
+        <h3 id="totalJobs">0</h3>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h5>Total Applications</h5>
+        <h3 id="totalApps">0</h3>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h5>Users</h5>
+        <h3>--</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ADD JOB -->
+  <div class="card p-3 mb-4">
+    <h5>Add New Job</h5>
+
+    <input id="title" class="form-control mb-2" placeholder="Job Title">
+    <input id="company" class="form-control mb-2" placeholder="Company">
+    <input id="location" class="form-control mb-2" placeholder="Location">
+<!-- ONLY ADD THESE INPUTS -->
+<input id="salary" class="form-control mb-2" placeholder="Salary (₹10k-₹20k)">
+<input id="type" class="form-control mb-2" placeholder="Type (Internship / Full-time)">
+<input id="experience" class="form-control mb-2" placeholder="Experience (Junior/Senior)">
+    <button onclick="addJob()" class="btn btn-primary">Add Job</button>
+  </div>
+
+  <!-- JOB TABLE -->
+  <div class="card p-3">
+    <h5>All Jobs</h5>
+
+    <table class="table table-bordered mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Title</th>
+          <th>Company</th>
+          <th>Location</th>
+          <th>Applicants</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody id="jobList"></tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+<script src="../js/admin.js"></script>
+</body>
+</html>

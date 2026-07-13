@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apply Job - NexHire</title>
+
+  <!-- FIXED PATH -->
+  <link rel="stylesheet" href="../css/styles.css">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark px-3">
+  <span class="navbar-brand">NexHire</span>
+  <div>
+    <a href="jobs.html" class="btn btn-light me-2">Jobs</a>
+    <a href="dashboard.html" class="btn btn-outline-light">Dashboard</a>
+  </div>
+</nav>
+
+<!-- Apply Form -->
+<div class="d-flex justify-content-center align-items-center" style="height:85vh;">
+  
+  <div class="card p-4" style="width:400px;">
+
+    <h3 class="text-center mb-3">Apply for Job</h3>
+
+    <!-- Job Info -->
+    <div class="mb-3">
+      <p><b>Position:</b> Frontend Developer</p>
+      <p><b>Company:</b> Google</p>
+    </div>
+
+    <!-- File Upload -->
+    <input type="file" id="resume" class="form-control mb-3">
+
+    <!-- Submit -->
+    <button onclick="applyJob()" class="btn btn-primary w-100">
+      Submit Application
+    </button>
+
+    <p class="text-muted mt-2 text-center" style="font-size:13px;">
+      Upload your latest resume (PDF preferred)
+    </p>
+
+  </div>
+
+</div>
+
+<!-- FIXED PATH -->
+<script src="../js/apply.js"></script>
+
+</body>
+</html>

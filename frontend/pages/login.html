@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Login - HireHub</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    }
+
+    .card {
+      border-radius: 15px;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-dark bg-dark px-3">
+    <span class="navbar-brand">NexHire</span>
+  </nav>
+
+  <div class="d-flex justify-content-center align-items-center" style="height:90vh;">
+    <div class="card p-4 shadow" style="width:360px;">
+
+      <h3 class="text-center mb-3">Login</h3>
+
+      <input id="email" class="form-control mb-2" placeholder="Email">
+      <input id="password" type="password" class="form-control mb-2" placeholder="Password">
+
+      <button onclick="login()" class="btn btn-primary w-100">Login</button>
+
+      <p class="text-center mt-3">
+        <a href="register.html">Create Account</a>
+      </p>
+
+    </div>
+  </div>
+
+  <script>
+    const API = "http://localhost:5000/api";
+
+    async function login() {
+      try {
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        if (!email || !password) {
+          alert("Fill all fields ❌");
+          return;
+        }
+
+        const res = await fetch(`${API}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        // ❌ Backend error
+        if (!res.ok) {
+          alert(data.msg || "Login failed ❌");
+          return;
+        }
+
+        console.log("LOGIN:", data);
+
+        // ✅ Store token + role
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
+
+        alert("Login Successful ✅");
+
+        // 🔁 Role-based redirect
+        if (data.role === "admin") {
+          window.location = "admin.html";
+        } else {
+          window.location = "jobs.html";
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert("Server error ❌");
+      }
+    }
+  </script>
+
+</body>
+
+</html>

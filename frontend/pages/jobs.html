@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jobs - NexHire</title>
+
+  <link rel="stylesheet" href="../css/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    .job-card {
+      border-radius: 15px;
+      transition: 0.3s;
+      border: none;
+    }
+
+    .job-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .company-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .filter-box {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+  </style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark px-3">
+  <span class="navbar-brand fw-bold">NexHire</span>
+  <div>
+    <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
+    <a href="login.html" class="btn btn-outline-light">Logout</a>
+  </div>
+</nav>
+
+<div class="container mt-4">
+
+  <!-- STATS -->
+  <div class="row mb-4 text-center">
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>Total Jobs</h6>
+        <h3 id="totalJobs">0</h3>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>Saved Jobs</h6>
+        <h3 id="savedJobs">0</h3>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card p-3">
+        <h6>Applied</h6>
+        <h3 id="appliedJobs">0</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SEARCH + FILTER -->
+  <div class="row mb-4 filter-box">
+
+    <div class="col-md-6">
+      <input id="search" onkeyup="filterJobs()" 
+        class="form-control" 
+        placeholder="🔍 Search jobs...">
+    </div>
+
+    <div class="col-md-3">
+      <select id="locationFilter" onchange="filterJobs()" class="form-control">
+        <option value="">Location</option>
+        <option>Bangalore</option>
+        <option>Pune</option>
+        <option>Hyderabad</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <select id="salaryFilter" onchange="filterJobs()" class="form-control">
+        <option value="">Salary</option>
+        <option>₹10</option>
+        <option>₹12</option>
+        <option>₹15</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- JOB CARDS -->
+  <div id="jobs" class="row"></div>
+
+</div>
+
+<script src="../js/jobs.js"></script>
+
+<script>
+const API = "http://localhost:5000/api";
+
+if(localStorage.getItem("role") !== "user"){
+  window.location = "admin.html";
+}
+
+async function loadJobs(){
+  const res = await fetch(`${API}/jobs`);
+  const jobs = await res.json();
+
+  display(jobs);
+}
+
+function display(data){
+  const container = document.getElementById("jobs");
+
+  container.innerHTML = data.map(j=>`
+    <div class="col-md-6">
+      <div class="card p-3 mb-3 shadow">
+
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5>${j.title}</h5>
+            <p class="text-muted">${j.company}</p>
+            <small>📍 ${j.location}</small>
+          </div>
+
+          <span class="badge bg-success">${j.salary || ""}</span>
+        </div>
+
+        <div class="mt-2">
+          <span class="badge bg-light text-dark">${j.type || ""}</span>
+          <span class="badge bg-light text-dark">${j.experience || ""}</span>
+        </div>
+
+        <button onclick="apply('${j._id}')" 
+        class="btn btn-primary btn-sm mt-3">
+          Apply
+        </button>
+
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById("totalJobs").innerText = data.length;
+}
+
+function apply(id){
+  localStorage.setItem("jobId", id);
+  window.location = "apply.html";
+}
+
+loadJobs();
+</script>
+
+</body>
+</html>
