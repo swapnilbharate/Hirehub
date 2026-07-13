@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import axios from 'axios'
 import { Briefcase, LogOut, Bell, Compass, LayoutDashboard, BrainCircuit, User } from 'lucide-react'
 
+// Configure Axios Base URL for Production
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || '';
+
 // Import Pages
 import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
