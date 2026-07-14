@@ -49,7 +49,7 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @Column(name = "profile_photo_url", columnDefinition = "LONGTEXT")
+    @Column(name = "profile_photo_url", columnDefinition = "TEXT")
     private String profilePhotoUrl;
 
     @Column(length = 100)

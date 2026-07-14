@@ -31,7 +31,7 @@ CREATE TABLE users (
     phone VARCHAR(20),
     headline VARCHAR(200),
     bio TEXT,
-    profile_photo_url LONGTEXT,
+    profile_photo_url TEXT,
     location VARCHAR(100),
     experience_years INT DEFAULT 0,
     linkedin_url VARCHAR(255),
