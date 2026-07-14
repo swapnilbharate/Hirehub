@@ -20,11 +20,6 @@ public class JwtTokenProvider {
     @Value("${hirehub.jwt.expiration-ms}")
     private long jwtExpirationMs;
 
-    private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64URL.decode(jwtSecret);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
-
     public String generateToken(Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
         Date now = new Date();

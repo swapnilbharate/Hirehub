@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { AuthContext } from '../App'
@@ -11,8 +11,22 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+
+  // Load saved credentials on page load
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('hirehub_saved_email')
+    const savedPassword = localStorage.getItem('hirehub_saved_password')
+    const savedRemember = localStorage.getItem('hirehub_remember_me')
+
+    if (savedRemember === 'true' && savedEmail && savedPassword) {
+      setEmail(savedEmail)
+      setPassword(savedPassword)
+      setRememberMe(true)
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,6 +35,18 @@ export default function Login() {
 
     try {
       const res = await axios.post('/api/auth/login', { email, password })
+
+      // Save or clear credentials based on Remember Me
+      if (rememberMe) {
+        localStorage.setItem('hirehub_saved_email', email)
+        localStorage.setItem('hirehub_saved_password', password)
+        localStorage.setItem('hirehub_remember_me', 'true')
+      } else {
+        localStorage.removeItem('hirehub_saved_email')
+        localStorage.removeItem('hirehub_saved_password')
+        localStorage.removeItem('hirehub_remember_me')
+      }
+
       login(
         { 
           email: res.data.email, 
@@ -75,7 +101,7 @@ export default function Login() {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-3">
             <div className="d-flex justify-content-between align-items-center mb-1">
               <label className="form-label text-muted fs-7 mb-0">Password</label>
               <a href="#" onClick={handleForgotPassword} className="text-primary text-decoration-none fs-8 fw-semibold">
@@ -99,6 +125,34 @@ export default function Login() {
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
+            </div>
+          </div>
+
+          {/* Remember Me Toggle */}
+          <div className="d-flex align-items-center justify-content-between mb-4">
+            <div className="form-check form-switch">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="rememberMeSwitch"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                style={{ 
+                  width: '2.5em', 
+                  height: '1.3em', 
+                  cursor: 'pointer',
+                  backgroundColor: rememberMe ? 'var(--primary)' : '#dee2e6',
+                  borderColor: rememberMe ? 'var(--primary)' : '#dee2e6'
+                }}
+              />
+              <label 
+                className="form-check-label text-muted fs-7" 
+                htmlFor="rememberMeSwitch"
+                style={{ cursor: 'pointer', marginLeft: '4px' }}
+              >
+                Remember Me
+              </label>
             </div>
           </div>
 

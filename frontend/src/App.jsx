@@ -66,14 +66,20 @@ export default function App() {
   }, [])
 
   // Handle Token Expiration Globally (401 Unauthorized / 403 Forbidden)
+  const isLoggingOut = React.useRef(false)
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-          // Token expired, invalid, or user no longer exists
-          logout();
-          alert("Your session has expired or is invalid. Please log in again.");
+          // Only show alert and logout once (prevents duplicate popups on multiple API calls)
+          if (!isLoggingOut.current) {
+            isLoggingOut.current = true
+            logout();
+            alert("Your session has expired or is invalid. Please log in again.");
+            // Reset the flag after a short delay so future logouts work
+            setTimeout(() => { isLoggingOut.current = false }, 2000)
+          }
         }
         return Promise.reject(error);
       }
